@@ -1,12 +1,6 @@
 // =====================================================
-// main.js — часы, меню, 3D-карточки, счётчик челленджа
+// main.js — часы, меню, 3D-карточки, появление блоков
 // =====================================================
-
-// ---------- Настройки челленджа: меняй эти две строки ----------
-const START_DATE = '2026-10-03'; // первый день челленджа
-const EARNED = 0;                // сколько уже заработано, $
-const TOTAL_DAYS = 90;
-const GOAL = 1000;
 
 // ---------- Часы в шапке ----------
 function tickClock() {
@@ -91,34 +85,6 @@ if (canHover && bigBtn) {
   });
 }
 
-// ---------- Счётчик челленджа ----------
-function challengeDay() {
-  const parts = START_DATE.split('-');
-  const start = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const day = Math.round((today - start) / 86400000) + 1; // 86400000 мс = сутки
-  return Math.min(Math.max(day, 1), TOTAL_DAYS);
-}
-
-const day = challengeDay();
-
-document.getElementById('hero-day').textContent = day;
-document.getElementById('ch-day').textContent = day;
-document.getElementById('hero-earned').textContent = EARNED;
-document.getElementById('ch-earned').textContent = EARNED;
-
-// Сетка из 90 клеток: пройденные дни — зелёные
-const grid = document.getElementById('grid90');
-for (let i = 1; i <= TOTAL_DAYS; i++) {
-  const cell = document.createElement('span');
-  if (i <= day) cell.className = 'done';
-  if (i === day) cell.classList.add('today');
-  cell.style.transitionDelay = (i * 0.008) + 's'; // клетки появляются волной
-  cell.title = 'День ' + i;
-  grid.append(cell);
-}
-
 // ---------- Появление блоков при прокрутке ----------
 const observer = new IntersectionObserver(function (entries) {
   entries.forEach(function (entry) {
@@ -133,11 +99,6 @@ const observer = new IntersectionObserver(function (entries) {
 
     // После появления убираем задержку — иначе наклон карточек будет «тормозить»
     setTimeout(function () { el.style.transitionDelay = ''; }, 1400);
-
-    // Полоса заработка заполняется, когда карточка челленджа видна
-    if (el.classList.contains('challenge-card')) {
-      document.getElementById('ch-bar').style.width = Math.max(1.5, Math.min(100, EARNED / GOAL * 100)) + '%';
-    }
   });
 }, { threshold: 0.12 });
 
