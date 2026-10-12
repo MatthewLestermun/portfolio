@@ -14,7 +14,6 @@
 
 - [FORMA](https://matthewlestermun.github.io/forma-fitness/) — фитнес-студия
 - [Зерно](https://matthewlestermun.github.io/zerno-coffee/) — кофейня-пекарня
-- [ML Трекер](https://matthewlestermun.github.io/ml-tracker/) — приложение «жизнь как игра»
 
 ## Технологии и безопасность
 

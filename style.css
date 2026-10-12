@@ -404,7 +404,7 @@ h2 {
 /* ===== 3D-карточки ===== */
 .projects {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 24px;
   perspective: 1400px; /* «глубина» сцены для наклона карточек */
 }
@@ -510,7 +510,7 @@ h2 {
   top: 30%;
   font-family: system-ui, sans-serif;
   font-weight: 700;
-  font-size: clamp(16px, 1.7vw, 24px);
+  font-size: clamp(20px, 2.6vw, 38px);
   line-height: 1;
   letter-spacing: -0.04em;
   color: #EDEDED;
@@ -538,7 +538,7 @@ h2 {
   top: 22%;
   width: 52%;
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: clamp(15px, 1.6vw, 22px);
+  font-size: clamp(19px, 2.4vw, 34px);
   line-height: 1.05;
   color: #2B1D14;
 }
