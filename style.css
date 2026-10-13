@@ -404,7 +404,7 @@ h2 {
 /* ===== 3D-карточки ===== */
 .projects {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   perspective: 1400px; /* «глубина» сцены для наклона карточек */
 }
@@ -510,7 +510,7 @@ h2 {
   top: 30%;
   font-family: system-ui, sans-serif;
   font-weight: 700;
-  font-size: clamp(20px, 2.6vw, 38px);
+  font-size: clamp(16px, 1.7vw, 24px);
   line-height: 1;
   letter-spacing: -0.04em;
   color: #EDEDED;
@@ -538,7 +538,7 @@ h2 {
   top: 22%;
   width: 52%;
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: clamp(19px, 2.4vw, 34px);
+  font-size: clamp(15px, 1.6vw, 22px);
   line-height: 1.05;
   color: #2B1D14;
 }
@@ -557,6 +557,33 @@ h2 {
 }
 
 .project:hover .screen img { transform: scale(1.07); }
+
+/* Превью «Эмаль» */
+.screen-emal .screen-body { background: #F2EFE9; }
+
+.screen-emal .mock-title {
+  position: absolute;
+  left: 8%;
+  top: 24%;
+  width: 54%;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(14px, 1.5vw, 21px);
+  line-height: 1.05;
+  color: #17191C;
+}
+
+.screen-emal .mock-title em { font-style: italic; color: #17191C; }
+
+.mock-tooth {
+  position: absolute;
+  right: 9%;
+  top: 8%;
+  height: 84%;
+  transition: transform 0.8s cubic-bezier(.2, .8, .2, 1);
+}
+
+/* При наведении зуб на карточке слегка наклоняется */
+.project:hover .mock-tooth { transform: rotate(-8deg) scale(1.06); }
 
 /* Превью трекера */
 .screen-tracker .screen-body {
@@ -961,6 +988,7 @@ h2 {
   .challenge { grid-template-columns: 1fr; gap: 40px; }
   .screen-forma .mock-title { font-size: 24px; }
   .screen-zerno .mock-title { font-size: 22px; }
+  .screen-emal .mock-title { font-size: 21px; }
   .mock-ring b { font-size: 16px; }
   .mock-rows span { font-size: 10px; }
 }
