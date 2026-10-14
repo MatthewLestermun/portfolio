@@ -8,6 +8,7 @@
 
 (function () {
   const canvas = document.getElementById('scene');
+  const heroText = document.querySelector('.hero-text');
 
   // Если 3D не поддерживается — показываем обычный логотип (класс no-3d включает его в CSS)
   function fallback() {
@@ -220,9 +221,18 @@
 
     // Положение логотипа: на компьютере — в правой части экрана, на телефоне — сверху по центру.
     // Размер считаем от ширины экрана, чтобы логотип не наезжал на текст и не вылезал за край.
+    // На телефоне ставим логотип ровно в свободное место между шапкой и текстом
+    let baseY = 0.2;
+    let baseScale = (halfW * 0.72) / TOTAL_WIDTH;
+    if (mobile) {
+      const pxPerUnit = vh / (2 * halfH);
+      const textTop = heroText ? heroText.getBoundingClientRect().top + sy : vh * 0.5; // где начинается текст на странице
+      const gapTop = 64;                        // низ шапки
+      const gap = Math.max(80, textTop - gapTop);
+      baseY = halfH - ((gapTop + textTop) / 2) / pxPerUnit;
+      baseScale = Math.min((halfW * 1.7) / TOTAL_WIDTH, (gap * 0.78) / (7 * pxPerUnit));
+    }
     const baseX = mobile ? 0 : halfW * 0.56;
-    const baseY = mobile ? halfH * 0.5 : 0.2;
-    const baseScale = mobile ? (halfW * 1.7) / TOTAL_WIDTH : (halfW * 0.72) / TOTAL_WIDTH;
     logo.position.x += (baseX * (1 - p) - logo.position.x) * 0.08;
     logoY += (baseY * (1 - p) - logoY) * 0.08;
     logo.position.y = logoY + lift; // сдвиг без сглаживания, чтобы логотип не отставал от текста
