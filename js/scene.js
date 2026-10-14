@@ -140,6 +140,7 @@
   let scrollP = 0;                       // 0 — логотип собран, 1 — кубы разлетелись
   let intro = reduceMotion ? 0 : 1;      // при загрузке кубы слетаются из разных сторон
   let mobile = false;
+  let logoY = 0;                         // высота логотипа без сдвига прокруткой
 
   function smooth(t) {
     return t * t * (3 - 2 * t); // плавное начало и конец движения
@@ -197,12 +198,25 @@
 
     if (intro > 0) intro = Math.max(0, intro - dt / 1.8);
 
-    // p — насколько кубы «разобраны»: либо из-за заставки, либо из-за прокрутки
-    const p = smooth(Math.max(scrollP, intro));
-
     // Сколько «единиц сцены» помещается на экране по ширине и высоте (от центра до края)
     const halfH = Math.tan(camera.fov * Math.PI / 360) * camera.position.z;
     const halfW = halfH * camera.aspect;
+
+    // На телефоне логотип стоит над текстом. Если разбирать его сразу, кубы летят прямо по буквам.
+    // Поэтому сначала логотип уезжает вверх вместе с первым экраном, сцена гаснет,
+    // и только потом кубы разлетаются — уже еле заметным фоном.
+    const vh = window.innerHeight;
+    const sy = window.scrollY;
+    const clamp01 = function (v) { return Math.max(0, Math.min(1, v)); };
+    const scatterP = mobile ? clamp01((sy - vh * 0.6) / (vh * 0.6)) : scrollP;
+    const fadeP = mobile ? clamp01(sy / (vh * 0.6)) : scrollP;
+
+    // p — насколько кубы «разобраны»: либо из-за заставки, либо из-за прокрутки
+    const p = smooth(Math.max(scatterP, intro));
+
+    // Сдвиг логотипа вверх вместе со страницей (в единицах сцены)
+    const lift = mobile ? (Math.min(sy, vh * 1.2) / vh) * 2 * halfH * (1 - p) : 0;
+    const depth = mobile ? 12 : 0; // на телефоне разлетевшиеся кубы уходят глубже — мельче и не мешают
 
     // Положение логотипа: на компьютере — в правой части экрана, на телефоне — сверху по центру.
     // Размер считаем от ширины экрана, чтобы логотип не наезжал на текст и не вылезал за край.
@@ -210,7 +224,8 @@
     const baseY = mobile ? halfH * 0.5 : 0.2;
     const baseScale = mobile ? (halfW * 1.7) / TOTAL_WIDTH : (halfW * 0.72) / TOTAL_WIDTH;
     logo.position.x += (baseX * (1 - p) - logo.position.x) * 0.08;
-    logo.position.y += (baseY * (1 - p) - logo.position.y) * 0.08;
+    logoY += (baseY * (1 - p) - logoY) * 0.08;
+    logo.position.y = logoY + lift; // сдвиг без сглаживания, чтобы логотип не отставал от текста
     const scale = baseScale + (1 - baseScale) * p;
     logo.scale.setScalar(logo.scale.x + (scale - logo.scale.x) * 0.08);
 
@@ -227,7 +242,7 @@
       cube.position.set(
         u.home.x + (u.away.x - u.home.x) * p,
         u.home.y + (u.away.y - u.home.y) * p + float,
-        u.home.z + (u.away.z - u.home.z) * p
+        u.home.z + (u.away.z - depth - u.home.z) * p
       );
       cube.rotation.set(
         u.spin.x * p + t * 0.15 * p,
@@ -243,7 +258,7 @@
     stars.rotation.x = mouse.y * 0.03;
 
     // Когда читаем контент — сцена уходит на задний план, чтобы не мешать тексту
-    canvas.style.opacity = String(1 - 0.72 * smooth(scrollP));
+    canvas.style.opacity = String(1 - (mobile ? 0.88 : 0.72) * smooth(fadeP));
 
     renderer.render(scene, camera);
     requestAnimationFrame(frame);
