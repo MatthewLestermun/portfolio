@@ -585,6 +585,12 @@ h2 {
 /* При наведении зуб на карточке слегка наклоняется */
 .project:hover .mock-tooth { transform: rotate(-8deg) scale(1.06); }
 
+/* Превью «Графит»: широкая карточка на весь ряд */
+.project--wide { grid-column: 1 / -1; }
+.project--wide .screen { aspect-ratio: 16 / 7; }
+.screen-grafit .screen-body { background: #09090B; }
+.screen-grafit img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; transition: transform 0.8s cubic-bezier(.2, .8, .2, 1); }
+
 /* Превью «Миндаль» */
 .screen-mindal .screen-body { background: #F3E4E0; }
 
