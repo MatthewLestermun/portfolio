@@ -1072,3 +1072,82 @@ h2 {
   .hero-title .line > span { transform: none; }
   .grid90 span { transform: none; }
 }
+
+/* ===== Кейсы: список слева, превью справа ===== */
+.cases {
+  display: grid;
+  grid-template-columns: minmax(260px, 360px) 1fr;
+  gap: 24px;
+  align-items: start;
+  perspective: 1400px;
+}
+
+.case-list { display: flex; flex-direction: column; gap: 6px; }
+
+.case-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 30px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(20, 21, 26, 0.6);
+  color: var(--muted);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.25s, color 0.25s, background 0.25s, transform 0.25s;
+}
+
+.case-item:hover { color: var(--text); border-color: rgba(198, 255, 74, 0.3); }
+.case-item.active { color: var(--text); border-color: rgba(198, 255, 74, 0.6); background: rgba(198, 255, 74, 0.06); transform: translateX(6px); }
+.case-item .idx { padding-top: 0; }
+.case-name { font-family: var(--display); font-weight: 700; font-size: 19px; line-height: 1.2; display: flex; flex-direction: column; }
+.case-name small { font-family: inherit; font-weight: 400; font-size: 12px; color: var(--muted); margin-top: 3px; letter-spacing: 0; }
+.case-arrow { color: var(--green); opacity: 0; transform: translateX(-6px); transition: 0.25s; }
+.case-item.active .case-arrow { opacity: 1; transform: none; }
+
+.case-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px;
+  background: rgba(20, 21, 26, 0.88);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.case-view:hover { border-color: rgba(198, 255, 74, 0.5); box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.9), 0 0 40px -20px rgba(198, 255, 74, 0.5); }
+.case-view .screen { aspect-ratio: 16 / 10; }
+.case-view .screen-body img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: opacity 0.2s, transform 0.8s cubic-bezier(.2, .8, .2, 1); }
+.case-view:hover .screen-body img { transform: scale(1.03); }
+.case-view.switching .screen-body img, .case-view.switching .case-meta, .case-view.switching .chips { opacity: 0; }
+.case-meta, .case-view .chips { transition: opacity 0.2s; transform: translateZ(24px); }
+
+.case-meta { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; }
+.case-meta h3 { font-family: var(--display); font-weight: 700; font-size: 24px; line-height: 1.2; margin-bottom: 4px; }
+.case-meta p { font-size: 13px; color: var(--muted); max-width: 520px; }
+.case-open { flex-shrink: 0; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--line); font-size: 13px; transition: 0.25s; }
+.case-view:hover .case-open { background: var(--green); color: #0B0C0F; border-color: var(--green); }
+
+/* Полоска автопереключения */
+.case-progress { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: transparent; }
+.case-progress b { display: block; height: 100%; width: 0; background: var(--green); }
+.case-view.ticking .case-progress b { animation: caseTick 6s linear forwards; }
+@keyframes caseTick { to { width: 100%; } }
+
+@media (max-width: 900px) {
+  .cases { grid-template-columns: 1fr; gap: 14px; }
+  .case-list { flex-direction: row; overflow-x: auto; scroll-snap-type: x mandatory; gap: 8px; margin: 0 -16px; padding: 0 16px 4px; scrollbar-width: none; }
+  .case-list::-webkit-scrollbar { display: none; }
+  .case-item { flex: 0 0 auto; scroll-snap-align: start; grid-template-columns: auto auto; padding: 10px 14px; }
+  .case-item.active { transform: none; }
+  .case-name { font-size: 15px; }
+  .case-name small, .case-arrow { display: none; }
+  .case-view { padding: 12px; }
+  .case-meta { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .case-meta h3 { font-size: 20px; }
+}
