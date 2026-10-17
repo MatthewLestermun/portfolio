@@ -69,6 +69,78 @@ if (canHover) {
   });
 }
 
+// ---------- Кейсы: список слева, превью справа ----------
+const CASES = [
+  { url: 'oblaka-glamping', img: 'oblaka', title: 'Облака', desc: 'Огромный заголовок поверх гор, каталог домиков с галереями и калькулятор брони с допами.', chips: ['каталог домиков', 'калькулятор брони', 'параллакс'] },
+  { url: 'zerno-coffee', img: 'zerno', title: 'Зерно', desc: '3D-стаканчики с брызгами кофе на Three.js, предзаказ с корзиной, квиз и карта лояльности.', chips: ['3D на Three.js', 'предзаказ', 'квиз'] },
+  { url: 'grafit-tattoo', img: 'grafit', title: 'Графит', desc: 'Хромовые 3D-звёзды, калькулятор стоимости тату и фильтр работ по стилям.', chips: ['3D на Three.js', 'калькулятор цены', 'фильтр работ'] },
+  { url: 'mindal-nails', img: 'mindal', title: 'Миндаль', desc: 'Онлайн-запись с выбором мастера и времени, промокод на скидку и галерея работ.', chips: ['онлайн-запись', 'галерея работ', 'промокод'] },
+  { url: 'emal-dental', img: 'emal', title: 'Эмаль', desc: 'Имплант в 3D разбирается при прокрутке, наглядное отбеливание и запись на консультацию.', chips: ['3D на Three.js', 'анимация по прокрутке', 'запись'] },
+  { url: 'forma-fitness', img: 'forma', title: 'FORMA', desc: 'Расписание тренировок, тарифы и запись на пробное занятие в тёмном минимализме.', chips: ['расписание', 'запись', 'тарифы'] }
+];
+
+const casesBox = document.getElementById('cases');
+const caseView = document.getElementById('case-view');
+const caseImg = document.getElementById('case-img');
+const caseButtons = document.querySelectorAll('.case-item');
+let caseIndex = 0;
+let caseTimer;
+
+// Заранее подгружаем картинки, чтобы переключение было мгновенным
+CASES.forEach(function (c) { new Image().src = 'img/case-' + c.img + '.jpg'; });
+
+function showCase(index) {
+  caseIndex = index;
+  const c = CASES[index];
+  caseButtons.forEach(function (b, i) {
+    b.classList.toggle('active', i === index);
+    b.setAttribute('aria-selected', i === index ? 'true' : 'false');
+  });
+
+  caseView.classList.add('switching');
+  setTimeout(function () {
+    caseImg.src = 'img/case-' + c.img + '.jpg';
+    caseImg.alt = 'Сайт «' + c.title + '»';
+    caseView.href = 'https://matthewlestermun.github.io/' + c.url + '/';
+    document.getElementById('case-url').textContent = c.url;
+    document.getElementById('case-title').textContent = c.title;
+    document.getElementById('case-desc').textContent = c.desc;
+    document.getElementById('case-chips').innerHTML = c.chips.map(function (t) { return '<span>' + t + '</span>'; }).join('');
+    caseView.classList.remove('switching');
+  }, 200);
+
+  // перезапуск полоски автопрокрутки
+  caseView.classList.remove('ticking');
+  void caseView.offsetWidth;
+  caseView.classList.add('ticking');
+}
+
+function startCases() {
+  clearInterval(caseTimer);
+  caseTimer = setInterval(function () { showCase((caseIndex + 1) % CASES.length); }, 6000);
+  caseView.classList.add('ticking');
+}
+
+function stopCases() {
+  clearInterval(caseTimer);
+  caseView.classList.remove('ticking');
+}
+
+caseButtons.forEach(function (button, i) {
+  button.addEventListener('click', function () {
+    showCase(i);
+    stopCases(); // человек выбрал сам — автопрокрутку больше не включаем
+    casesBox.dataset.manual = '1';
+    if (!canHover) button.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  });
+  if (canHover) button.addEventListener('mouseenter', function () { if (i !== caseIndex) showCase(i); });
+});
+
+casesBox.addEventListener('mouseenter', stopCases);
+casesBox.addEventListener('mouseleave', function () { if (!casesBox.dataset.manual) startCases(); });
+
+if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) startCases();
+
 // ---------- Большая кнопка «магнитится» к курсору ----------
 const bigBtn = document.querySelector('.big-btn');
 
