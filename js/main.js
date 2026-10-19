@@ -175,3 +175,40 @@ const observer = new IntersectionObserver(function (entries) {
 }, { threshold: 0.12 });
 
 document.querySelectorAll('.reveal').forEach(function (el) { observer.observe(el); });
+
+// ---------- Кастомный курсор: точка + кольцо, которое догоняет ----------
+if (canHover && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const dot = document.createElement('div');
+  const ring = document.createElement('div');
+  dot.className = 'cursor-dot';
+  ring.className = 'cursor-ring';
+  ring.innerHTML = '<span>открыть</span>';
+  document.body.append(dot, ring);
+
+  let mx = -100, my = -100, rx = -100, ry = -100;
+
+  document.addEventListener('mousemove', function (e) {
+    mx = e.clientX; my = e.clientY;
+    dot.style.transform = 'translate(' + mx + 'px,' + my + 'px)';
+    document.documentElement.classList.add('has-cursor');
+  });
+  document.addEventListener('mouseleave', function () { document.documentElement.classList.remove('has-cursor'); });
+  document.addEventListener('mousedown', function () { ring.classList.add('down'); });
+  document.addEventListener('mouseup', function () { ring.classList.remove('down'); });
+
+  // Кольцо плавно тянется за точкой
+  (function follow() {
+    rx += (mx - rx) * 0.18;
+    ry += (my - ry) * 0.18;
+    ring.style.transform = 'translate(' + rx + 'px,' + ry + 'px)' + (ring.classList.contains('down') ? ' scale(.85)' : '');
+    requestAnimationFrame(follow);
+  })();
+
+  // Над превью кейса — большое кольцо «открыть», над ссылками и кнопками — увеличенное
+  document.addEventListener('mouseover', function (e) {
+    const view = e.target.closest('.case-view');
+    const link = e.target.closest('a, button');
+    ring.classList.toggle('view', !!view);
+    ring.classList.toggle('hover', !view && !!link);
+  });
+}
