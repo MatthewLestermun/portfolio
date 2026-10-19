@@ -1151,3 +1151,15 @@ h2 {
   .case-meta { flex-direction: column; align-items: flex-start; gap: 12px; }
   .case-meta h3 { font-size: 20px; }
 }
+
+/* ===== Кастомный курсор (только для мыши) ===== */
+.cursor-dot, .cursor-ring { position: fixed; left: 0; top: 0; z-index: 9999; pointer-events: none; border-radius: 50%; opacity: 0; transition: opacity .3s; }
+.cursor-dot { width: 6px; height: 6px; margin: -3px 0 0 -3px; background: var(--green); }
+.cursor-ring { width: 36px; height: 36px; margin: -18px 0 0 -18px; border: 1.5px solid rgba(198, 255, 74, .6); display: grid; place-items: center; transition: opacity .3s, width .25s, height .25s, margin .25s, background .25s, border-color .25s; }
+.cursor-ring span { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #0B0C0F; opacity: 0; transition: opacity .2s; }
+.has-cursor .cursor-dot, .has-cursor .cursor-ring { opacity: 1; }
+.has-cursor, .has-cursor a, .has-cursor button { cursor: none; }
+.cursor-ring.hover { width: 58px; height: 58px; margin: -29px 0 0 -29px; background: rgba(198, 255, 74, .12); border-color: var(--green); }
+.cursor-ring.view { width: 78px; height: 78px; margin: -39px 0 0 -39px; background: var(--green); border-color: var(--green); }
+.cursor-ring.view span { opacity: 1; }
+.cursor-ring.down { transform: scale(.85); }
