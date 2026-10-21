@@ -946,6 +946,61 @@ h2 {
 
 .contact .muted { font-size: 13px; }
 
+/* Две большие кнопки: WhatsApp и Telegram */
+.big-btns {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.big-btns .big-btn { margin-bottom: 0; }
+.big-btn-alt {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+.big-btn-alt b { background: var(--text); color: var(--bg); }
+.big-btn-alt:hover { border-color: var(--green); box-shadow: none; }
+
+/* ===== Частые вопросы ===== */
+.faq {
+  max-width: 860px;
+  border-top: 1px solid var(--line);
+}
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 22px 0;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: clamp(15px, 2vw, 19px);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after {
+  content: '+';
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 22px;
+  color: var(--green);
+  transition: transform 0.3s;
+}
+.faq summary:hover { color: var(--green); }
+.faq details[open] summary::after { transform: rotate(45deg); }
+.faq details p {
+  max-width: 680px;
+  padding: 0 0 22px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
 /* Контакты текстом: Telegram и телефон */
 .contact-lines {
   display: flex;
